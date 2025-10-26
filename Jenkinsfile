@@ -22,7 +22,7 @@ pipeline {
                     # Install nvm (Node Version Manager)
                     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
                     export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
                     
                     # Install and use Node.js 18
                     nvm install 18
@@ -40,7 +40,7 @@ pipeline {
                 echo '📦 Installing dependencies...'
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
                     nvm use 18
                     npm ci --prefer-offline --no-audit --no-fund
                 '''
@@ -52,7 +52,7 @@ pipeline {
                 echo '🏗️ Building application...'
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
                     nvm use 18
                     npm run build
                 '''
@@ -65,7 +65,7 @@ pipeline {
                 // Add any tests here if you have them
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
                     nvm use 18
                     npm run lint || echo "Linting completed with warnings"
                 '''
@@ -78,7 +78,7 @@ pipeline {
                 // Kill any existing processes on port 1000
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
                     nvm use 18
                     
                     lsof -i :1000 | grep LISTEN | awk '{print $2}' | xargs kill -9 || echo "No process running on port 1000"
@@ -87,7 +87,7 @@ pipeline {
                 // Start the application
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
                     nvm use 18
                     
                     PORT=1000 HOST=0.0.0.0 npm start &
