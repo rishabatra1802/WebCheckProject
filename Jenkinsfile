@@ -24,9 +24,9 @@ pipeline {
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
                     
-                    # Install and use Node.js 18
-                    nvm install 18
-                    nvm use 18
+                    # Install and use Node.js 20 (to satisfy package requirements)
+                    nvm install 20
+                    nvm use 20
                     
                     # Verify installation
                     node --version
@@ -41,7 +41,7 @@ pipeline {
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    nvm use 18
+                    nvm use 20
                     npm ci --prefer-offline --no-audit --no-fund
                 '''
             }
@@ -53,7 +53,7 @@ pipeline {
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    nvm use 18
+                    nvm use 20
                     npm run build
                 '''
             }
@@ -66,7 +66,7 @@ pipeline {
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    nvm use 18
+                    nvm use 20
                     npm run lint || echo "Linting completed with warnings"
                 '''
             }
@@ -79,7 +79,7 @@ pipeline {
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    nvm use 18
+                    nvm use 20
                     
                     lsof -i :1000 | grep LISTEN | awk '{print $2}' | xargs kill -9 || echo "No process running on port 1000"
                 '''
@@ -88,7 +88,7 @@ pipeline {
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    nvm use 18
+                    nvm use 20
                     
                     PORT=1000 HOST=0.0.0.0 npm start &
                 '''
