@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  webcheck:
+    build: .
+    ports:
+      - "1000:1000"
+    environment:
+      - PORT=1000
+      - HOST=0.0.0.0
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    volumes:
+      - /app/.next/cache

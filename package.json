@@ -1,0 +1,32 @@
+{
+  "name": "webcheck",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -H 0.0.0.0 -p ${PORT:-1000}",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@sparticuz/chromium": "^141.0.0",
+    "axios": "^1.12.2",
+    "broken-link-checker": "^0.7.8",
+    "cheerio": "^1.1.2",
+    "lighthouse": "^13.0.1",
+    "next": "16.0.0",
+    "puppeteer-core": "^24.26.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

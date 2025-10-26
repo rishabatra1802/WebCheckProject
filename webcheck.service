@@ -1,0 +1,19 @@
+[Unit]
+Description=WebCheck Website Analyzer
+After=network.target
+
+[Service]
+Type=exec
+User=ubuntu
+WorkingDirectory=/home/ubuntu/webcheck
+Environment=NODE_ENV=production
+Environment=PORT=1000
+Environment=HOST=0.0.0.0
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
