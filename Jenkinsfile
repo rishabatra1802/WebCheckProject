@@ -1,10 +1,6 @@
 pipeline {
     agent any
     
-    tools {
-        nodejs "node-18"
-    }
-    
     environment {
         PORT = "1000"
         HOST = "0.0.0.0"
@@ -19,25 +15,47 @@ pipeline {
             }
         }
         
-        stage('Setup') {
+        stage('Setup Node.js') {
             steps {
-                echo '⚙️ Setting up environment...'
-                sh 'node --version'
-                sh 'npm --version'
+                echo '⚙️ Setting up Node.js environment...'
+                sh '''
+                    # Install nvm (Node Version Manager)
+                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    
+                    # Install and use Node.js 18
+                    nvm install 18
+                    nvm use 18
+                    
+                    # Verify installation
+                    node --version
+                    npm --version
+                '''
             }
         }
         
         stage('Install Dependencies') {
             steps {
                 echo '📦 Installing dependencies...'
-                sh 'npm ci --prefer-offline --no-audit --no-fund'
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    nvm use 18
+                    npm ci --prefer-offline --no-audit --no-fund
+                '''
             }
         }
         
         stage('Build') {
             steps {
                 echo '🏗️ Building application...'
-                sh 'npm run build'
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    nvm use 18
+                    npm run build
+                '''
             }
         }
         
@@ -45,7 +63,12 @@ pipeline {
             steps {
                 echo '🧪 Running tests...'
                 // Add any tests here if you have them
-                sh 'npm run lint || echo "Linting completed with warnings"'
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    nvm use 18
+                    npm run lint || echo "Linting completed with warnings"
+                '''
             }
         }
         
@@ -53,10 +76,22 @@ pipeline {
             steps {
                 echo '🚀 Deploying application...'
                 // Kill any existing processes on port 1000
-                sh 'lsof -i :1000 | grep LISTEN | awk \'{print $2}\' | xargs kill -9 || echo "No process running on port 1000"'
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    nvm use 18
+                    
+                    lsof -i :1000 | grep LISTEN | awk '{print $2}' | xargs kill -9 || echo "No process running on port 1000"
+                '''
                 
                 // Start the application
-                sh 'PORT=1000 HOST=0.0.0.0 npm start &'
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    nvm use 18
+                    
+                    PORT=1000 HOST=0.0.0.0 npm start &
+                '''
                 
                 // Wait a moment for the app to start
                 sh 'sleep 5'
