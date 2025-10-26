@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'pop'}
+    agent { label 'pop' }
     
     environment {
         PORT = "1000"
@@ -25,6 +25,13 @@ pipeline {
                     node --version
                     npm --version
                 '''
+            }
+        }
+        
+        stage('Checkout') {
+            steps {
+                echo '📥 Checking out code from repository...'
+                checkout scm
             }
         }
         
@@ -55,7 +62,6 @@ pipeline {
         stage('Test') {
             steps {
                 echo '🧪 Running tests...'
-                // Add any tests here if you have them
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
@@ -70,7 +76,6 @@ pipeline {
                 echo '📍 Getting server IP address...'
                 sh '''
                     # Get the server's public IP address
-                    echo "##vso[task.setvariable variable=SERVER_IP;isOutput=true]$(curl -s ifconfig.me)"
                     echo "Server IP: $(curl -s ifconfig.me)"
                 '''
             }
@@ -126,7 +131,8 @@ pipeline {
         
         cleanup {
             echo '🧹 Cleaning up workspace...'
-            cleanWs()
+            // Use deleteDir() instead of cleanWs() for better compatibility
+            deleteDir()
         }
     }
 }
