@@ -8,13 +8,6 @@ pipeline {
     }
     
     stages {
-        stage('Checkout') {
-            steps {
-                echo '📥 Checking out code from repository...'
-                checkout scm
-            }
-        }
-        
         stage('Setup Node.js') {
             steps {
                 echo '⚙️ Setting up Node.js environment...'
