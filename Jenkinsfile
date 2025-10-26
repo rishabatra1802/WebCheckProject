@@ -72,6 +72,17 @@ pipeline {
             }
         }
         
+        stage('Get Server IP') {
+            steps {
+                echo '📍 Getting server IP address...'
+                sh '''
+                    # Get the server's public IP address
+                    echo "##vso[task.setvariable variable=SERVER_IP;isOutput=true]$(curl -s ifconfig.me)"
+                    echo "Server IP: $(curl -s ifconfig.me)"
+                '''
+            }
+        }
+        
         stage('Deploy') {
             steps {
                 echo '🚀 Deploying application...'
@@ -96,8 +107,12 @@ pipeline {
                 // Wait a moment for the app to start
                 sh 'sleep 5'
                 
-                // Check if the app is running
-                sh 'curl -f http://localhost:1000/api/health || echo "Application may still be starting..."'
+                // Check if the app is running and display the IP
+                sh '''
+                    SERVER_IP=$(curl -s ifconfig.me)
+                    echo "Application is now running on: http://$SERVER_IP:1000"
+                    curl -f http://localhost:1000/api/health || echo "Application may still be starting..."
+                '''
             }
         }
     }
@@ -105,7 +120,10 @@ pipeline {
     post {
         success {
             echo '✅ Pipeline completed successfully!'
-            echo "🌐 Application should be accessible at http://YOUR_EC2_IP:1000"
+            sh '''
+                SERVER_IP=$(curl -s ifconfig.me)
+                echo "🌐 Application is now accessible at http://$SERVER_IP:1000"
+            '''
         }
         
         failure {
